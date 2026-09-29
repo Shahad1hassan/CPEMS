@@ -47,7 +47,6 @@ class AppTextStyles {
   static const TextStyle button = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: AppColors.textOnPrimary,
   );
 
   static const TextStyle readingValue = TextStyle(

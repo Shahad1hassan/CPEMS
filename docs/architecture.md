@@ -87,36 +87,36 @@ lib/
 │
 └── features/
 		├── authentication/
-		│   ├── screens/
-		│   │   └── login_screen.dart
+		│   ├── pages/
+		│   │   └── login_page.dart
 		│   ├── widgets/
 		│   ├── models/
 		│   └── services/
     │
     ├── main_navigation/
-    │   └── screens/
-    │       └── main_navigation_screen.dart
+    │   └── pages/
+    │       └── main_navigation_page.dart
     │
     ├── home/
-    │   ├── screens/
-    │   │   └── home_screen.dart
+    │   ├── pages/
+    │   │   └── home_page.dart
     │   └── widgets/
     │
     ├── measurement/
-    │   ├── screens/
-    │   │   ├── measurement_screen.dart
-    │   │   ├── measurement_steps_screen.dart
-    │   │   └── measurement_result_screen.dart
+    │   ├── pages/
+    │   │   ├── measurement_page.dart
+    │   │   ├── measurement_steps_page.dart
+    │   │   └── measurement_result_page.dart
     │   └── widgets/
     │
     ├── charts/
-    │   ├── screens/
-    │   │   └── charts_screen.dart
+    │   ├── pages/
+    │   │   └── charts_page.dart
     │   └── widgets/
     │
     └── profile/
-        ├── screens/
-        │   └── profile_screen.dart
+        ├── pages/
+        │   └── profile_page.dart
         └── widgets/
 ```
 
