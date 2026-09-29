@@ -16,6 +16,18 @@ class AppTheme {
 
       appBarTheme: const AppBarTheme(centerTitle: false, elevation: 0),
 
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.surface,
+        indicatorColor: AppColors.primaryLight,
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: AppColors.primary);
+          }
+
+          return const IconThemeData(color: AppColors.textSecondary);
+        }),
+      ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,

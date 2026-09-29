@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_text_styles.dart';
 
+import '../../main_navigation/patient_navigation.dart';
+
 class PatientRegisterPage extends StatefulWidget {
   const PatientRegisterPage({super.key});
 
@@ -179,9 +181,14 @@ class _PatientRegisterPageState extends State<PatientRegisterPage> {
 
                 ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Supabase registration will be added later.
-                    }
+                    // if (_formKey.currentState!.validate()) {
+                    //   // Supabase registration will be added later.
+                    // }
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const PatientMainPage(),
+                        ),
+                      );
                   },
                   child: const Text('Create Account'),
                 ),

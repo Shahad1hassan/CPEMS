@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 import 'register_page.dart';
+import '../../main_navigation/patient_navigation.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -124,13 +125,18 @@ class _LoginPageState extends State<LoginPage> {
 
                 ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final email = _emailController.text.trim();
-                      final password = _passwordController.text;
+                    // if (_formKey.currentState!.validate()) {
+                    //   final email = _emailController.text.trim();
+                    //   final password = _passwordController.text;
 
-                      debugPrint('Email: $email');
-                      debugPrint('Password: $password');
-                    }
+                    //   debugPrint('Email: $email');
+                    //   debugPrint('Password: $password');
+                    // }
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const PatientMainPage(),
+                        ),
+                      );
                   },
                   child: const Text('Log In'),
                 ),
