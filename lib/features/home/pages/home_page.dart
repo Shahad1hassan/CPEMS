@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../schedule/pages/my_schedule_page.dart';
 import '../../schedule/data/reminder_store.dart';
 import '../../schedule/pages/reminder_details_page.dart';
+import '../../profile/data/patient_store.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -52,14 +53,24 @@ class HomePage extends StatelessWidget {
             ),
         const SizedBox(height: 26),
 
-        Text(
-  'Hi ${patientName?.trim().isNotEmpty == true ? patientName!.trim().split(' ').first : 'there'}!',
-          style: TextStyle(
-            color: navy,
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        ValueListenableBuilder<String>(
+  valueListenable: PatientStore.name,
+  builder: (context, name, child) {
+    final firstName = name.trim().isNotEmpty
+        ? name.trim().split(RegExp(r'\s+')).first
+        : 'there';
+
+    return Text(
+      'Hi $firstName!',
+      style: const TextStyle(
+        color: navy,
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  },
+),
+        
         const SizedBox(height: 5),
         const Text(
           'Your respiratory health overview',

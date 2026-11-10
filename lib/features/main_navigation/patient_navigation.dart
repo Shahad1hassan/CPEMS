@@ -26,7 +26,7 @@ class _PatientMainPageState extends State<PatientMainPage> {
   HomePage(patientName: widget.patientName),
   const MeasurementPage(),
   const ChartsPage(),
-  const ProfilePage(),
+  ProfilePage(patientName: widget.patientName),
 ];
 
   @override
