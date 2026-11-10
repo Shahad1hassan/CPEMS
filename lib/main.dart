@@ -1,5 +1,4 @@
 
-
 import 'package:flutter/material.dart';
 import 'app.dart';
 import 'features/schedule/data/reminder_store.dart';
@@ -19,6 +18,9 @@ Future<void> main() async {
     await NotificationService.scheduleReminder(reminder);
   }
 
+  // Start the application
   runApp(const CpemsApp());
 }
+
+
 

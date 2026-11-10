@@ -5,22 +5,29 @@ import '../measurement/pages/measurement_page.dart';
 import '../charts/pages/charts_page.dart';
 import '../profile/pages/profile_page.dart';
 
+
 class PatientMainPage extends StatefulWidget {
-  const PatientMainPage({super.key});
+  const PatientMainPage({
+    super.key,
+    this.patientName,
+  });
+
+  final String? patientName;
 
   @override
   State<PatientMainPage> createState() => _PatientMainPageState();
 }
 
+
 class _PatientMainPageState extends State<PatientMainPage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    MeasurementPage(),
-    ChartsPage(),
-    ProfilePage(),
-  ];
+  List<Widget> get _pages => [
+  HomePage(patientName: widget.patientName),
+  const MeasurementPage(),
+  const ChartsPage(),
+  const ProfilePage(),
+];
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../schedule/pages/my_schedule_page.dart';
 import '../../schedule/data/reminder_store.dart';
-
+import '../../schedule/pages/reminder_details_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    this.patientName,
+  });
+
+  final String? patientName;
   static const Color blue = Color(0xFF2563EB);
   static const Color navy = Color(0xFF142A55);
   static const Color background = Color(0xFFF7F9FD);
@@ -47,8 +52,8 @@ class HomePage extends StatelessWidget {
             ),
         const SizedBox(height: 26),
 
-        const Text(
-          'Hi Fahad!',
+        Text(
+  'Hi ${patientName?.trim().isNotEmpty == true ? patientName!.trim().split(' ').first : 'there'}!',
           style: TextStyle(
             color: navy,
             fontSize: 32,
@@ -181,23 +186,36 @@ ValueListenableBuilder<List<Map<String, dynamic>>>(
               final dose =
                   reminder['dose']?.toString() ?? '';
 
-              return _scheduleItem(
-                isMedication
-                    ? Icons.medication_outlined
-                    : Icons.air_rounded,
-                time.format(context),
-                isMedication && name.isNotEmpty
-                    ? name
-                    : 'PEF Measurement',
-                isMedication
-                    ? (dose.isNotEmpty
-                        ? 'Dose: $dose'
-                        : 'Medication reminder')
-                    : 'Use your CPEMS device',
-                isMedication
-                    ? Colors.redAccent
-                    : blue,
-              );
+              
+return InkWell(
+  borderRadius: BorderRadius.circular(12),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReminderDetailsPage(
+          reminder: reminder,
+        ),
+      ),
+    );
+  },
+  child: _scheduleItem(
+    isMedication
+        ? Icons.medication_outlined
+        : Icons.air_rounded,
+    time.format(context),
+    isMedication && name.isNotEmpty
+        ? name
+        : 'PEF Measurement',
+    isMedication
+        ? (dose.isNotEmpty
+            ? 'Dose: $dose'
+            : 'Medication reminder')
+        : 'Use your CPEMS device',
+    isMedication ? Colors.redAccent : blue,
+  ),
+);
+
             },
           ),
         ],

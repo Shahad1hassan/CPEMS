@@ -180,16 +180,21 @@ class _PatientRegisterPageState extends State<PatientRegisterPage> {
                 const SizedBox(height: 32),
 
                 ElevatedButton(
-                  onPressed: () {
-                    // if (_formKey.currentState!.validate()) {
-                    //   // Supabase registration will be added later.
-                    // }
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const PatientMainPage(),
-                        ),
-                      );
-                  },
+                  
+onPressed: () {
+  if (_formKey.currentState!.validate()) {
+    final patientName = _nameController.text.trim();
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => PatientMainPage(
+          patientName: patientName,
+        ),
+      ),
+    );
+  }
+},
+
                   child: const Text('Create Account'),
                 ),
               ],
