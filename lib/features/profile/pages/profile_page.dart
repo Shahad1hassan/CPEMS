@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/patient_store.dart';
 import 'edit_profile_page.dart';
 import 'medical_information_page.dart';
+import 'my_medications_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({
@@ -173,9 +174,17 @@ ValueListenableBuilder<DateTime?>(
 ),
             const SizedBox(height: 10),
             _menuTile(
-              Icons.medication_outlined,
-              'My Medications',
-            ),
+  Icons.medication_outlined,
+  'My Medications',
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MyMedicationsPage(),
+      ),
+    );
+  },
+),
             const SizedBox(height: 10),
             _menuTile(
               Icons.description_outlined,
