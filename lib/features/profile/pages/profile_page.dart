@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import '../data/patient_store.dart';
 import 'edit_profile_page.dart';
+import 'medical_information_page.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({
     super.key,
@@ -158,9 +160,17 @@ ValueListenableBuilder<DateTime?>(
             const SizedBox(height: 12),
 
             _menuTile(
-              Icons.favorite_border,
-              'Medical Information',
-            ),
+  Icons.favorite_border,
+  'Medical Information',
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MedicalInformationPage(),
+      ),
+    );
+  },
+),
             const SizedBox(height: 10),
             _menuTile(
               Icons.medication_outlined,
@@ -233,32 +243,43 @@ static Widget _infoRow(
 }
 
 
-  static Widget _menuTile(IconData icon, String title) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: blue),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: navy,
+  
+static Widget _menuTile(
+  IconData icon,
+  String title, {
+  VoidCallback? onTap,
+}) {
+  return Material(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(18),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(icon, color: blue),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: navy,
+                ),
               ),
             ),
-          ),
-          const Icon(
-            Icons.chevron_right,
-            color: Colors.blueGrey,
-          ),
-        ],
+            const Icon(
+              Icons.chevron_right,
+              color: Colors.blueGrey,
+            ),
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
 }
+}
+
+
