@@ -17,44 +17,32 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'CPEMS',
-                  style: TextStyle(
-                    color: blue,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                const Expanded(
+                  child: Text(
+                    'Hi Fahad!',
+                    style: TextStyle(
+                      color: navy,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.notifications_none_rounded,
-                      ),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.settings_outlined,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
+
+                IconButton(
+                  icon: const Icon(Icons.notifications_none_rounded),
+                  tooltip: 'Notifications',
+                  onPressed: () {},
+                ),
+
+                IconButton(
+                  icon: const Icon(Icons.settings_outlined),
+                  tooltip: 'Settings',
+                  onPressed: () {},
                 ),
               ],
             ),
-        const SizedBox(height: 26),
 
-        const Text(
-          'Hi Fahad!',
-          style: TextStyle(
-            color: navy,
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         const SizedBox(height: 5),
         const Text(
           'Your respiratory health overview',

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+
 import '../home/pages/home_page.dart';
 import '../measurement/pages/measurement_page.dart';
 import '../charts/pages/charts_page.dart';
 import '../profile/pages/profile_page.dart';
-
+  
 class PatientMainPage extends StatefulWidget {
   const PatientMainPage({super.key});
 
@@ -22,9 +25,31 @@ class _PatientMainPageState extends State<PatientMainPage> {
     ProfilePage(),
   ];
 
+  final List<String> _pageTitles = const [
+    'CPEMS',
+    'Measurement',
+    'Charts',
+    'Profile',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        backgroundColor: AppColors.background,
+        elevation: 0,
+
+        title: Text(
+          _pageTitles[_selectedIndex],
+          style: AppTextStyles.heading.copyWith(
+            color: _selectedIndex == 0
+                ? AppColors.primary
+                : AppColors.textPrimary,
+          ),
+        ),
+      ),
       body: SafeArea(child: _pages[_selectedIndex]),
 
       bottomNavigationBar: NavigationBar(
