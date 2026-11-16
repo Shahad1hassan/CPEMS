@@ -217,4 +217,34 @@ static Future<void> delete(
 
     return items;
   }
+
+  // Delete reminders linked to a specific medication.
+  static Future<void> deleteRemindersForMedication(
+    int medicationId,
+  ) async {
+    final linkedReminders = reminders.value.where(
+      (reminder) =>
+          reminder['type'] == 'Medication' &&
+          reminder['medicationId'] == medicationId,
+    ).toList();
+
+    // Cancel all scheduled notifications for this medication.
+    for (final reminder in linkedReminders) {
+      final id = reminder['id'];
+
+      if (id is int) {
+        await NotificationService.cancelReminder(id);
+      }
+    }
+
+    // Keep reminders belonging to other medications.
+    reminders.value = reminders.value.where(
+      (reminder) =>
+          reminder['type'] != 'Medication' ||
+          reminder['medicationId'] != medicationId,
+    ).toList();
+
+    await saveReminders();
+  }
+
 }
