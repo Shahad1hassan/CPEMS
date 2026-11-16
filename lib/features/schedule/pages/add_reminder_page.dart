@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../profile/data/medication_store.dart';
 
 class AddReminderPage extends StatefulWidget {
   final DateTime selectedDate;
@@ -18,7 +19,7 @@ class AddReminderPage extends StatefulWidget {
 class _AddReminderPageState extends State<AddReminderPage> {
   String reminderType = 'Medication';
   String repeat = 'Daily';
-
+int? selectedMedicationId;
   final nameController = TextEditingController();
   final doseController = TextEditingController();
 
@@ -35,7 +36,7 @@ selectedDate = widget.existingReminder?['date'] as DateTime?
     reminderType = reminder['type']?.toString() ?? 'Medication';
     repeat = reminder['repeat']?.toString() ?? 'Daily';
     selectedTime = reminder['time'] as TimeOfDay;
-
+selectedMedicationId = reminder['medicationId'] as int?;
     nameController.text = reminder['name']?.toString() ?? '';
     doseController.text = reminder['dose']?.toString() ?? '';
   }
@@ -136,6 +137,53 @@ selectedDate = widget.existingReminder?['date'] as DateTime?
           if (reminderType == 'Medication') ...[
             const SizedBox(height: 20),
 
+ValueListenableBuilder<List<Map<String, dynamic>>>(
+  valueListenable: MedicationStore.medications,
+  builder: (context, medications, child) {
+    final selectedExists = medications.any(
+      (medication) => medication['id'] == selectedMedicationId,
+    );
+
+    return DropdownButtonFormField<int>(
+      key: ValueKey(selectedMedicationId),
+      initialValue: selectedExists ? selectedMedicationId : null,
+      decoration: const InputDecoration(
+        labelText: 'Select Medication',
+        border: OutlineInputBorder(),
+        prefixIcon: Icon(Icons.medication_outlined),
+      ),
+      hint: const Text('Choose a saved medication'),
+      items: medications.map((medication) {
+        return DropdownMenuItem<int>(
+          value: medication['id'] as int,
+          child: Text(medication['name']?.toString() ?? ''),
+        );
+      }).toList(),
+      
+onChanged: (id) {
+  final medication = id == null
+      ? null
+      : MedicationStore.findById(id);
+
+  setState(() {
+    selectedMedicationId = id;
+
+    if (medication != null) {
+      nameController.text =
+          medication['name']?.toString() ?? '';
+
+      doseController.text =
+          medication['dose']?.toString() ?? '';
+    }
+  });
+},
+
+    );
+  },
+),
+
+const SizedBox(height: 15),
+
             TextField(
               controller: nameController,
               decoration: const InputDecoration(
@@ -186,15 +234,46 @@ selectedDate = widget.existingReminder?['date'] as DateTime?
           const SizedBox(height: 35),
 
    ElevatedButton(
-  onPressed: () {
-    Navigator.pop(context, {
-      'type': reminderType,
-'date': selectedDate,      'time': selectedTime,
-      'name': nameController.text.trim(),
-      'dose': doseController.text.trim(),
-      'repeat': repeat,
-    });
-  },
+  
+onPressed: () {
+  if (reminderType == 'Medication') {
+    // Keep supporting older reminders that have no medicationId.
+    final isLegacyReminder =
+        widget.existingReminder != null &&
+        widget.existingReminder!['medicationId'] == null;
+
+    if (!isLegacyReminder && selectedMedicationId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a medication first'),
+        ),
+      );
+      return;
+    }
+  }
+
+  final medication = selectedMedicationId == null
+      ? null
+      : MedicationStore.findById(selectedMedicationId!);
+
+  Navigator.pop(context, {
+    'type': reminderType,
+    'date': selectedDate,
+    'time': selectedTime,
+    'medicationId':
+        reminderType == 'Medication' ? selectedMedicationId : null,
+    'name': reminderType == 'Medication'
+        ? (medication?['name']?.toString() ??
+            nameController.text.trim())
+        : '',
+    'dose': reminderType == 'Medication'
+        ? (medication?['dose']?.toString() ??
+            doseController.text.trim())
+        : '',
+    'repeat': repeat,
+  });
+},
+
   child: Text(
     widget.existingReminder == null
         ? 'Save Reminder'
