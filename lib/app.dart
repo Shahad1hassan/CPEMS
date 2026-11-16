@@ -11,7 +11,7 @@ class CpemsApp extends StatelessWidget {
       title: 'CPEMS',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const WelcomePage()
+      home: const WelcomePage(),
     );
   }
 }

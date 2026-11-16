@@ -1,13 +1,24 @@
+
 import 'package:flutter/material.dart';
+
 import '../../schedule/pages/my_schedule_page.dart';
 import '../../schedule/data/reminder_store.dart';
-
+import '../../schedule/pages/reminder_details_page.dart';
+import '../../profile/data/patient_store.dart';
+import '../../profile/data/medication_store.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    this.patientName,
+  });
+
+  final String? patientName;
+
   static const Color blue = Color(0xFF2563EB);
   static const Color navy = Color(0xFF142A55);
   static const Color background = Color(0xFFF7F9FD);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,25 +27,33 @@ class HomePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+            // Shahad's new header layout with the dynamic patient name.
             Row(
               children: [
-                const Expanded(
-                  child: Text(
-                    'Hi Fahad!',
-                    style: TextStyle(
-                      color: navy,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Expanded(
+                  child: ValueListenableBuilder<String>(
+                    valueListenable: PatientStore.name,
+                    builder: (context, name, child) {
+                      final firstName = name.trim().isNotEmpty
+                          ? name.trim().split(RegExp(r'\s+')).first
+                          : 'there';
+
+                      return Text(
+                        'Hi $firstName!',
+                        style: const TextStyle(
+                          color: navy,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
                   ),
                 ),
-
                 IconButton(
                   icon: const Icon(Icons.notifications_none_rounded),
                   tooltip: 'Notifications',
                   onPressed: () {},
                 ),
-
                 IconButton(
                   icon: const Icon(Icons.settings_outlined),
                   tooltip: 'Settings',
@@ -43,71 +62,72 @@ class HomePage extends StatelessWidget {
               ],
             ),
 
-        const SizedBox(height: 5),
-        const Text(
-          'Your respiratory health overview',
-          style: TextStyle(color: Colors.blueGrey),
-        ),
+            const SizedBox(height: 5),
 
-        const SizedBox(height: 24),
+            const Text(
+              'Your respiratory health overview',
+              style: TextStyle(color: Colors.blueGrey),
+            ),
 
-        _card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Latest PEF Reading',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: navy,
-                ),
-              ),
-              const SizedBox(height: 18),
-              Row(
+            const SizedBox(height: 24),
+
+            _card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.air_rounded,
-                    color: blue,
-                    size: 36,
-                  ),
-                  const SizedBox(width: 12),
                   const Text(
-                    '--',
+                    'Latest PEF Reading',
                     style: TextStyle(
-                      fontSize: 34,
+                      fontSize: 17,
                       fontWeight: FontWeight.bold,
                       color: navy,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  const Text('L/min'),
+                  const SizedBox(height: 18),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.air_rounded,
+                        color: blue,
+                        size: 36,
+                      ),
+                      SizedBox(width: 12),
+                      Text(
+                        '--',
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                          color: navy,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Text('L/min'),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'No measurements recorded yet',
+                    style: TextStyle(color: Colors.blueGrey),
+                  ),
                 ],
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'No measurements recorded yet',
-                style: TextStyle(color: Colors.blueGrey),
-              ),
-            ],
-          ),
-        ),
+            ),
 
-        const SizedBox(height: 18),
+            const SizedBox(height: 18),
 
-        _card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+            _card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.calendar_month_outlined,
-                    color: blue,
-                  ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: Text(
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        color: blue,
+                      ),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: Text(
                           "Today's Schedule",
                           style: TextStyle(
                             fontSize: 18,
@@ -117,90 +137,147 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       TextButton(
-                        
-onPressed: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const MySchedulePage(),
-    ),
-  );
-},
-
-                        child: const Text('See all →'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const MySchedulePage(),
+                            ),
+                          );
+                        },
+                        child: const Text('See all'),
                       ),
                     ],
                   ),
+
                   const Divider(height: 25),
 
-ValueListenableBuilder<List<Map<String, dynamic>>>(
-  valueListenable: ReminderStore.reminders,
-  builder: (context, reminders, child) {
-    final todayReminders = ReminderStore.forDate(DateTime.now());
+                  ValueListenableBuilder<List<Map<String, dynamic>>>(
+                    valueListenable: ReminderStore.reminders,
+                    builder: (context, reminders, child) {
+                      return ValueListenableBuilder<
+                          List<Map<String, dynamic>>>(
+                        valueListenable: MedicationStore.medications,
+                        builder: (context, medications, child) {
+                          final todayReminders =
+                              ReminderStore.forDate(DateTime.now());
 
-    if (todayReminders.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 20),
-        child: Center(
-          child: Text(
-            'No reminders scheduled for today',
-            style: TextStyle(
-              color: Colors.blueGrey,
-              fontSize: 14,
-            ),
-          ),
-        ),
-      );
-    }
+                          if (todayReminders.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              child: Center(
+                                child: Text(
+                                  'No reminders scheduled for today',
+                                  style: TextStyle(
+                                    color: Colors.blueGrey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
 
-    return Column(
-      children: [
-        for (int i = 0; i < todayReminders.length; i++) ...[
-          if (i > 0) const Divider(height: 24),
+                          return Column(
+                            children: [
+                              for (int i = 0;
+                                  i < todayReminders.length;
+                                  i++) ...[
+                                if (i > 0)
+                                  const Divider(height: 24),
 
-          Builder(
-            builder: (context) {
-              final reminder = todayReminders[i];
-              final isMedication = reminder['type'] == 'Medication';
-              final time = reminder['time'] as TimeOfDay;
+                                Builder(
+                                  builder: (context) {
+                                    final reminder =
+                                        todayReminders[i];
 
-              final name =
-                  reminder['name']?.toString() ?? '';
-              final dose =
-                  reminder['dose']?.toString() ?? '';
+                                    final isMedication =
+                                        reminder['type'] == 'Medication';
 
-              return _scheduleItem(
-                isMedication
-                    ? Icons.medication_outlined
-                    : Icons.air_rounded,
-                time.format(context),
-                isMedication && name.isNotEmpty
-                    ? name
-                    : 'PEF Measurement',
-                isMedication
-                    ? (dose.isNotEmpty
-                        ? 'Dose: $dose'
-                        : 'Medication reminder')
-                    : 'Use your CPEMS device',
-                isMedication
-                    ? Colors.redAccent
-                    : blue,
-              );
-            },
-          ),
-        ],
-      ],
-    );
-  },
-),
+                                    final time =
+                                        reminder['time'] as TimeOfDay;
+
+                                    final medicationId =
+                                        reminder['medicationId'];
+
+                                    Map<String, dynamic>? medication;
+
+                                    if (isMedication &&
+                                        medicationId is int) {
+                                      for (final item in medications) {
+                                        if (item['id'] == medicationId) {
+                                          medication = item;
+                                          break;
+                                        }
+                                      }
+                                    }
+
+                                    // Use current medication information.
+                                    // Fall back for older reminders.
+                                    final name =
+                                        medication?['name']?.toString() ??
+                                        reminder['name']?.toString() ??
+                                        '';
+
+                                    final dose =
+                                        medication?['dose']?.toString() ??
+                                        reminder['dose']?.toString() ??
+                                        '';
+
+                                    return InkWell(
+                                      borderRadius:
+                                          BorderRadius.circular(12),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ReminderDetailsPage(
+                                              reminder: reminder,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: _scheduleItem(
+                                        isMedication
+                                            ? Icons.medication_outlined
+                                            : Icons.air_rounded,
+                                        time.format(context),
+                                        isMedication && name.isNotEmpty
+                                            ? name
+                                            : 'PEF Measurement',
+                                        isMedication
+                                            ? (dose.isNotEmpty
+                                                ? 'Dose: $dose'
+                                                : 'Medication reminder')
+                                            : 'Use your CPEMS device',
+                                        isMedication
+                                            ? Colors.redAccent
+                                            : blue,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
+
             const SizedBox(height: 16),
+
             _card(
               child: const Row(
                 children: [
-                  Icon(Icons.lightbulb_outline, color: Colors.amber),
+                  Icon(
+                    Icons.lightbulb_outline,
+                    color: Colors.amber,
+                  ),
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -211,7 +288,9 @@ ValueListenableBuilder<List<Map<String, dynamic>>>(
                 ],
               ),
             ),
+
             const SizedBox(height: 16),
+
             Row(
               children: [
                 Expanded(
@@ -238,6 +317,7 @@ ValueListenableBuilder<List<Map<String, dynamic>>>(
       ),
     );
   }
+
   static Widget _card({required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(18),
@@ -255,6 +335,7 @@ ValueListenableBuilder<List<Map<String, dynamic>>>(
       child: child,
     );
   }
+
   static Widget _scheduleItem(
     IconData icon,
     String time,
@@ -274,7 +355,7 @@ ValueListenableBuilder<List<Map<String, dynamic>>>(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '$time  ·  $title',
+                '$time  -  $title',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: navy,
@@ -298,6 +379,7 @@ ValueListenableBuilder<List<Map<String, dynamic>>>(
       ],
     );
   }
+
   static Widget _quickAction(
     IconData icon,
     String title,

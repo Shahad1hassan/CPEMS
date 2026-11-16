@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
@@ -7,9 +8,14 @@ import '../home/pages/home_page.dart';
 import '../measurement/pages/measurement_page.dart';
 import '../charts/pages/charts_page.dart';
 import '../profile/pages/profile_page.dart';
-  
+
 class PatientMainPage extends StatefulWidget {
-  const PatientMainPage({super.key});
+  const PatientMainPage({
+    super.key,
+    this.patientName,
+  });
+
+  final String? patientName;
 
   @override
   State<PatientMainPage> createState() => _PatientMainPageState();
@@ -18,12 +24,12 @@ class PatientMainPage extends StatefulWidget {
 class _PatientMainPageState extends State<PatientMainPage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    MeasurementPage(),
-    ChartsPage(),
-    ProfilePage(),
-  ];
+  List<Widget> get _pages => [
+        HomePage(patientName: widget.patientName),
+        const MeasurementPage(),
+        const ChartsPage(),
+        ProfilePage(patientName: widget.patientName),
+      ];
 
   final List<String> _pageTitles = const [
     'CPEMS',
@@ -40,7 +46,6 @@ class _PatientMainPageState extends State<PatientMainPage> {
         centerTitle: true,
         backgroundColor: AppColors.background,
         elevation: 0,
-
         title: Text(
           _pageTitles[_selectedIndex],
           style: AppTextStyles.heading.copyWith(
@@ -50,8 +55,9 @@ class _PatientMainPageState extends State<PatientMainPage> {
           ),
         ),
       ),
-      body: SafeArea(child: _pages[_selectedIndex]),
-
+      body: SafeArea(
+        child: _pages[_selectedIndex],
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
@@ -85,3 +91,4 @@ class _PatientMainPageState extends State<PatientMainPage> {
     );
   }
 }
+
