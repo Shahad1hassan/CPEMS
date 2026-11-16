@@ -1,0 +1,4 @@
+enum MeasurementGuideMode {
+  adult,
+  child,
+}
