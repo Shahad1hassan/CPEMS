@@ -27,54 +27,39 @@ class HomePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+            // Shahad's new header layout with the dynamic patient name.
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'CPEMS',
-                  style: TextStyle(
-                    color: blue,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: ValueListenableBuilder<String>(
+                    valueListenable: PatientStore.name,
+                    builder: (context, name, child) {
+                      final firstName = name.trim().isNotEmpty
+                          ? name.trim().split(RegExp(r'\s+')).first
+                          : 'there';
+
+                      return Text(
+                        'Hi $firstName!',
+                        style: const TextStyle(
+                          color: navy,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
                   ),
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.notifications_none_rounded,
-                      ),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.settings_outlined,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
+                IconButton(
+                  icon: const Icon(Icons.notifications_none_rounded),
+                  tooltip: 'Notifications',
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.settings_outlined),
+                  tooltip: 'Settings',
+                  onPressed: () {},
                 ),
               ],
-            ),
-
-            const SizedBox(height: 26),
-
-            ValueListenableBuilder<String>(
-              valueListenable: PatientStore.name,
-              builder: (context, name, child) {
-                final firstName = name.trim().isNotEmpty
-                    ? name.trim().split(RegExp(r'\s+')).first
-                    : 'there';
-
-                return Text(
-                  'Hi $firstName!',
-                  style: const TextStyle(
-                    color: navy,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
             ),
 
             const SizedBox(height: 5),
@@ -161,7 +146,7 @@ class HomePage extends StatelessWidget {
                             ),
                           );
                         },
-                        child: const Text('See all →'),
+                        child: const Text('See all'),
                       ),
                     ],
                   ),
@@ -180,8 +165,7 @@ class HomePage extends StatelessWidget {
 
                           if (todayReminders.isEmpty) {
                             return const Padding(
-                              padding:
-                                  EdgeInsets.symmetric(vertical: 20),
+                              padding: EdgeInsets.symmetric(vertical: 20),
                               child: Center(
                                 child: Text(
                                   'No reminders scheduled for today',
@@ -208,8 +192,7 @@ class HomePage extends StatelessWidget {
                                         todayReminders[i];
 
                                     final isMedication =
-                                        reminder['type'] ==
-                                            'Medication';
+                                        reminder['type'] == 'Medication';
 
                                     final time =
                                         reminder['time'] as TimeOfDay;
@@ -221,31 +204,25 @@ class HomePage extends StatelessWidget {
 
                                     if (isMedication &&
                                         medicationId is int) {
-                                      for (final item
-                                          in medications) {
-                                        if (item['id'] ==
-                                            medicationId) {
+                                      for (final item in medications) {
+                                        if (item['id'] == medicationId) {
                                           medication = item;
                                           break;
                                         }
                                       }
                                     }
 
-                                    // Show the latest medication data.
-                                    // Fall back to saved values for older reminders.
+                                    // Use current medication information.
+                                    // Fall back for older reminders.
                                     final name =
-                                        medication?['name']
-                                                ?.toString() ??
-                                            reminder['name']
-                                                ?.toString() ??
-                                            '';
+                                        medication?['name']?.toString() ??
+                                        reminder['name']?.toString() ??
+                                        '';
 
                                     final dose =
-                                        medication?['dose']
-                                                ?.toString() ??
-                                            reminder['dose']
-                                                ?.toString() ??
-                                            '';
+                                        medication?['dose']?.toString() ??
+                                        reminder['dose']?.toString() ??
+                                        '';
 
                                     return InkWell(
                                       borderRadius:
@@ -266,8 +243,7 @@ class HomePage extends StatelessWidget {
                                             ? Icons.medication_outlined
                                             : Icons.air_rounded,
                                         time.format(context),
-                                        isMedication &&
-                                                name.isNotEmpty
+                                        isMedication && name.isNotEmpty
                                             ? name
                                             : 'PEF Measurement',
                                         isMedication
@@ -379,7 +355,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '$time  ·  $title',
+                '$time  -  $title',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: navy,
