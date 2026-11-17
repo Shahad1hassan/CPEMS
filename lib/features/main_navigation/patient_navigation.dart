@@ -41,25 +41,24 @@ class _PatientMainPageState extends State<PatientMainPage> {
   @override
   Widget build(BuildContext context) {
    return Scaffold(
-  appBar: _selectedIndex == 0
+  appBar: (_selectedIndex == 0 || _selectedIndex == 3)
       ? null
       : AppBar(
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          backgroundColor: AppColors.background,
-          surfaceTintColor: AppColors.background,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          shadowColor: Colors.transparent,
-          title: Text(
-            _pageTitles[_selectedIndex],
-            style: AppTextStyles.heading.copyWith(
-              color: _selectedIndex == 0
-                  ? AppColors.primary
-                  : AppColors.textPrimary,
-            ),
-          ),
-        ),
+    automaticallyImplyLeading: false,
+    centerTitle: true,
+    backgroundColor: const Color(0xFFF4F8FF),
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    scrolledUnderElevation: 0,
+    shadowColor: Colors.transparent,
+    forceMaterialTransparency: false,
+    title: Text(
+      _pageTitles[_selectedIndex],
+      style: AppTextStyles.heading.copyWith(
+        color: AppColors.textPrimary,
+      ),
+    ),
+  ),
   body: _pages[_selectedIndex],
   bottomNavigationBar: NavigationBar(
     selectedIndex: _selectedIndex,
