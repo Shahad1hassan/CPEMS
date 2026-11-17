@@ -40,55 +40,58 @@ class _PatientMainPageState extends State<PatientMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        backgroundColor: AppColors.background,
-        elevation: 0,
-        title: Text(
-          _pageTitles[_selectedIndex],
-          style: AppTextStyles.heading.copyWith(
-            color: _selectedIndex == 0
-                ? AppColors.primary
-                : AppColors.textPrimary,
+   return Scaffold(
+  appBar: _selectedIndex == 0
+      ? null
+      : AppBar(
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          backgroundColor: AppColors.background,
+          surfaceTintColor: AppColors.background,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          shadowColor: Colors.transparent,
+          title: Text(
+            _pageTitles[_selectedIndex],
+            style: AppTextStyles.heading.copyWith(
+              color: _selectedIndex == 0
+                  ? AppColors.primary
+                  : AppColors.textPrimary,
+            ),
           ),
         ),
+  body: _pages[_selectedIndex],
+  bottomNavigationBar: NavigationBar(
+    selectedIndex: _selectedIndex,
+    onDestinationSelected: (index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    },
+    destinations: const [
+      NavigationDestination(
+        icon: Icon(Icons.home_outlined),
+        selectedIcon: Icon(Icons.home),
+        label: 'Home',
       ),
-      body: SafeArea(
-        child: _pages[_selectedIndex],
+      NavigationDestination(
+        icon: Icon(Icons.air_outlined),
+        selectedIcon: Icon(Icons.air),
+        label: 'Measurement',
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.air_outlined),
-            selectedIcon: Icon(Icons.air),
-            label: 'Measurement',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart),
-            label: 'Charts',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+      NavigationDestination(
+        icon: Icon(Icons.bar_chart_outlined),
+        selectedIcon: Icon(Icons.bar_chart),
+        label: 'Charts',
       ),
-    );
+      NavigationDestination(
+        icon: Icon(Icons.person_outline),
+        selectedIcon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+    ],
+  ),
+);
   }
 }
 
